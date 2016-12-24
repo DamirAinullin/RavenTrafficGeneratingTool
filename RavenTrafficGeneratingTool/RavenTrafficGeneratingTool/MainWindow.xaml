@@ -1,0 +1,48 @@
+﻿<Window x:Class="RavenTrafficGeneratingTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.galasoft.ch/ignore"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:helpers="clr-namespace:RavenTrafficGeneratingTool.Helpers"
+        mc:Ignorable="d ignore"
+        Height="580"
+        Width="960"
+        Title="RavenDB traffic generating tool"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid x:Name="LayoutRoot" Margin="0,0,0,0.0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="110*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="DatabaseUrlTextBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Database URL" VerticalAlignment="Top" RenderTransformOrigin="0.163,0.812" Grid.Row="0"/>
+        <StackPanel Grid.Row="0">
+            <TextBox x:Name="DatabaseUrlTextBox" HorizontalAlignment="Left" helpers:FocusExtension.IsFocused="{Binding IsDatabaseUrlFocused}" Text="{Binding DatabaseUrl, ValidatesOnExceptions=true, NotifyOnValidationError=true, UpdateSourceTrigger=PropertyChanged}" Height="22" Margin="10,32,0,12.4" TextWrapping="NoWrap" VerticalAlignment="Center" Width="255" MaxLines="1"/>
+        </StackPanel>
+        <TextBlock x:Name="TimesPerMinuteTextBlock" HorizontalAlignment="Left" Margin="272,10,0,0" TextWrapping="Wrap" Text="Times per minute" VerticalAlignment="Top" RenderTransformOrigin="0.163,0.812" Grid.Row="0"/>
+        <StackPanel Grid.Row="0">
+            <TextBox x:Name="CategoryTextBox" HorizontalAlignment="Left" Text="{Binding TimesPerMinute, UpdateSourceTrigger=PropertyChanged}" Height="22" Margin="270,32,0,12.4" TextWrapping="NoWrap" VerticalAlignment="Center" Width="97" MaxLines="1"/>
+        </StackPanel>
+        <Button x:Name="StartButton" Content="Start" Command="{Binding StartCommand}" IsEnabled="{Binding StartIsEnabled, Mode=TwoWay}" HorizontalAlignment="Left" Margin="372,32,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="0"/>
+        <Button x:Name="StopButton" Content="Stop" Command="{Binding StopCommand}" IsEnabled="{Binding StopIsEnabled, Mode=TwoWay}" HorizontalAlignment="Left" Margin="452,32,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="0"/>
+        <ToggleButton x:Name="KeepDownButton" Content="Keep Down" Command="{Binding KeepDownCommand}" CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}" IsChecked="{Binding IsAutoScrollEnabled}" HorizontalAlignment="Left" Margin="532,32,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="0" RenderTransformOrigin="1.475,0.509"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <i:Interaction.Behaviors>
+                <helpers:AutoScrollBehavior/>
+            </i:Interaction.Behaviors>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="197*"/>
+                    <ColumnDefinition Width="707*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="LogTextBlock" TextWrapping="WrapWithOverflow" Background="Gainsboro" Margin="10,14,14,10" Padding="5,5,5,5" Text="{Binding FullText}" IsReadOnly="True" Grid.ColumnSpan="2"/>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>
