@@ -12,6 +12,7 @@ namespace RavenTrafficGeneratingTool.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             SimpleIoc.Default.Register<IConfigurationService, ConfigurationService>();
+            SimpleIoc.Default.Register<ITrafficService, TrafficService>();
 
             SimpleIoc.Default.Register<MainViewModel>();
         }
@@ -22,6 +23,10 @@ namespace RavenTrafficGeneratingTool.ViewModel
 
         public static void Cleanup()
         {
+            if (SimpleIoc.Default.IsRegistered<MainViewModel>())
+            {
+                SimpleIoc.Default.Unregister<MainViewModel>();
+            }
         }
     }
 }

@@ -3,7 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using RavenTrafficGeneratingTool.Helpers;
+using RavenTrafficGeneratingTool.Messages;
 using RavenTrafficGeneratingTool.Services;
 
 namespace RavenTrafficGeneratingTool.ViewModel
@@ -12,20 +14,28 @@ namespace RavenTrafficGeneratingTool.ViewModel
     {
         private string _databaseUrl;
         private int _timesPerMinute;
-        private bool _startIsEnabled;
+        private bool _startIsEnabled = true;
         private bool _stopIsEnabled;
         private string _fullText;
+        private bool _isDatabaseUrlFocused;
         private readonly IConfigurationService _configurationService;
+        private readonly ITrafficService _trafficService;
         private bool _isAutoScrollEnabled;
         private ICommand _keepDownCommand;
         private ICommand _startCommand;
         private ICommand _stopCommand;
         private ICommand _windowLoadedCommand;
-        private bool _isDatabaseUrlFocused;
+        private ICommand _clearCommand;
+        private string _messageText;
 
-        public MainViewModel(IConfigurationService configurationService)
+        public MainViewModel(IConfigurationService configurationService, ITrafficService trafficService)
         {
             _configurationService = configurationService;
+            _trafficService = trafficService;
+            Messenger.Default.Register<RandomMessage>(this, message =>
+            {
+                FullText += message.Text + "\n";
+            });
         }
 
         public string DatabaseUrl
@@ -39,6 +49,12 @@ namespace RavenTrafficGeneratingTool.ViewModel
                     throw new ValidationException("Invalid URL");
                 }
             }
+        }
+
+        public string MessageText
+        {
+            get { return _messageText; }
+            set { Set(ref _messageText, value); }
         }
 
         public int TimesPerMinute
@@ -95,7 +111,9 @@ namespace RavenTrafficGeneratingTool.ViewModel
             {
                 return _startCommand ?? (_startCommand = new RelayCommand(() =>
                 {
-
+                    StartIsEnabled = false;
+                    StopIsEnabled = true;
+                    _trafficService.Start(DatabaseUrl, TimesPerMinute);
                 }));
             }
         }
@@ -106,7 +124,9 @@ namespace RavenTrafficGeneratingTool.ViewModel
             {
                 return _stopCommand ?? (_stopCommand = new RelayCommand(() =>
                 {
-
+                    StartIsEnabled = true;
+                    StopIsEnabled = false;
+                    _trafficService.Stop();
                 }));
             }
         }
@@ -137,6 +157,23 @@ namespace RavenTrafficGeneratingTool.ViewModel
                     IsDatabaseUrlFocused = true;
                 }));
             }
+        }
+
+        public ICommand ClearCommand
+        {
+            get
+            {
+                return _clearCommand ?? (_clearCommand = new RelayCommand(() =>
+                {
+                    FullText = String.Empty;
+                }, () => !String.IsNullOrEmpty(FullText)));
+            }
+        }
+
+        public override void Cleanup()
+        {
+            ((IDisposable)_trafficService)?.Dispose();
+            base.Cleanup();
         }
 
         private bool CheckDatabaseUrl()

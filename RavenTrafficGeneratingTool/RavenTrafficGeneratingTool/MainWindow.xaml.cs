@@ -1,16 +1,9 @@
-﻿using System.Windows;
-using RavenTrafficGeneratingTool.ViewModel;
+﻿using RavenTrafficGeneratingTool.ViewModel;
 
 namespace RavenTrafficGeneratingTool
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        /// <summary>
-        /// Initializes a new instance of the MainWindow class.
-        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
