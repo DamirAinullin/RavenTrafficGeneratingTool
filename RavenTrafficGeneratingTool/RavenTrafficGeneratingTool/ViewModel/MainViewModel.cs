@@ -12,21 +12,22 @@ namespace RavenTrafficGeneratingTool.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        private readonly IConfigurationService _configurationService;
+        private readonly ITrafficService _trafficService;
         private string _databaseUrl;
+        private string _messageText;
+        private string _fullText;
         private int _timesPerMinute;
         private bool _startIsEnabled = true;
         private bool _stopIsEnabled;
-        private string _fullText;
+        private bool _clearIsEnabled;
         private bool _isDatabaseUrlFocused;
-        private readonly IConfigurationService _configurationService;
-        private readonly ITrafficService _trafficService;
         private bool _isAutoScrollEnabled;
         private ICommand _keepDownCommand;
         private ICommand _startCommand;
         private ICommand _stopCommand;
         private ICommand _windowLoadedCommand;
         private ICommand _clearCommand;
-        private string _messageText;
 
         public MainViewModel(IConfigurationService configurationService, ITrafficService trafficService)
         {
@@ -34,7 +35,11 @@ namespace RavenTrafficGeneratingTool.ViewModel
             _trafficService = trafficService;
             Messenger.Default.Register<RandomMessage>(this, message =>
             {
-                FullText += message.Text + "\n";
+                if (!ClearIsEnabled)
+                {
+                    ClearIsEnabled = true;
+                }
+                MessageText = message.Text + "\n";
             });
         }
 
@@ -73,6 +78,12 @@ namespace RavenTrafficGeneratingTool.ViewModel
         {
             get { return _stopIsEnabled; }
             set { Set(ref _stopIsEnabled, value); }
+        }
+
+        public bool ClearIsEnabled
+        {
+            get { return _clearIsEnabled; }
+            set { Set(ref _clearIsEnabled, value); }
         }
 
         public string FullText
@@ -165,8 +176,11 @@ namespace RavenTrafficGeneratingTool.ViewModel
             {
                 return _clearCommand ?? (_clearCommand = new RelayCommand(() =>
                 {
+                    // hack for cleaning textBox
+                    FullText = null;
                     FullText = String.Empty;
-                }, () => !String.IsNullOrEmpty(FullText)));
+                    ClearIsEnabled = false;
+                }));
             }
         }
 

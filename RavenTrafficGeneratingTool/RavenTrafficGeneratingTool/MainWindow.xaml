@@ -32,16 +32,12 @@
         <Button x:Name="StartButton" Content="Start" Command="{Binding StartCommand}" IsEnabled="{Binding StartIsEnabled, Mode=TwoWay}" HorizontalAlignment="Left" Margin="372,32,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="0"/>
         <Button x:Name="StopButton" Content="Stop" Command="{Binding StopCommand}" IsEnabled="{Binding StopIsEnabled, Mode=TwoWay}" HorizontalAlignment="Left" Margin="452,32,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="0"/>
         <ToggleButton x:Name="KeepDownButton" Content="Keep Down" Command="{Binding KeepDownCommand}" CommandParameter="{Binding IsChecked,RelativeSource={RelativeSource Self}}" IsChecked="{Binding IsAutoScrollEnabled}" HorizontalAlignment="Left" Margin="532,32,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="0" RenderTransformOrigin="1.475,0.509"/>
-        <Button x:Name="ClearButton" Content="Clear" Command="{Binding ClearCommand}" HorizontalAlignment="Left" Margin="612,32,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="0" RenderTransformOrigin="-0.173,0.591"/>
+        <Button x:Name="ClearButton" Content="Clear" Command="{Binding ClearCommand}" IsEnabled="{Binding ClearIsEnabled, Mode=TwoWay}" HorizontalAlignment="Left" Margin="612,32,0,0" VerticalAlignment="Top" Width="75" Height="22" Grid.Row="0" RenderTransformOrigin="-0.173,0.591"/>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <i:Interaction.Behaviors>
                 <helpers:AutoScrollBehavior/>
             </i:Interaction.Behaviors>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="197*"/>
-                    <ColumnDefinition Width="707*"/>
-                </Grid.ColumnDefinitions>
                 <TextBox x:Name="TextBlock" TextWrapping="WrapWithOverflow" Background="Gainsboro" Margin="10,14,14,10" Padding="5,5,5,5" Text="{Binding FullText}" helpers:TextBoxExtension.MessageText="{Binding MessageText}" IsReadOnly="True" Grid.ColumnSpan="2"/>
             </Grid>
         </ScrollViewer>

@@ -36,7 +36,7 @@ namespace RavenTrafficGeneratingTool.Services
             };
             _documentStore.Initialize();
 
-            int dueTime = Convert.ToInt32(60000.0/timesPerMinute);
+            int dueTime = Convert.ToInt32(60000.0 / timesPerMinute);
             _timer = new Timer(SendRequestCallback, null, 0, dueTime);
         }
 
